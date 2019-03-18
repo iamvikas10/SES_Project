@@ -1,0 +1,6 @@
+1. Install Virtualenv ( to keep development environment safe from other environment )
+2. Install python3
+3. Install Flask
+4. Install MySQL
+5. Install mysqlclient ( pip3 install --trusted-host pypi.org --trusted-host files.pythonhosted.org --trusted-host pypi.python.org mysql-connector-python
+6. 
