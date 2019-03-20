@@ -29,6 +29,8 @@ def userRegistration(userName, name, phoneNo, email, password, confirmPassword):
                                 updateDB=viewUpdateDB.update_tableUser(usr)
                                 if(updateDB==True):
                                     return user;
+                                else:
+                                    return "Error in Validations"
                                         
     except customExceptions.InvalidConfirmPasswordException as e:
         print(e)

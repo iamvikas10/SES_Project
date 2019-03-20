@@ -7,17 +7,17 @@ Created on Mar 18, 2019
         
 class InvalidPasswordException(Exception):
     def __init__(self):
-        super().__init__("The password is invalid")
+        return super().__init__("The password is invalid")
 
 class InvalidMobileNumberException(Exception):
     def __init__(self):
-        super().__init__("Invalid Mobile Number")
+        return super().__init__("Invalid Mobile Number")
         
 class InvalidConfirmPasswordException(Exception):
     def __init__(self):
-        super().__init__("Password and Confirm Password do not match")  
+        return super().__init__("Password and Confirm Password do not match")  
 
 class DataNotUpdated(Exception):
 	def __init__(self):
-		super().__init__("Data not updated to database")        
+		return super().__init__("Data not updated to database")        
         
