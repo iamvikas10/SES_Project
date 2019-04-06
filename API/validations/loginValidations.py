@@ -1,17 +1,15 @@
 '''
-Created on Mar 18, 2019
+Created on 4 April, 2019
 
 @author: iamvikas10
 '''
-from classes.user import User 
-from exceptions import customExceptions
-import re
+from classes.user import User
 from utility import DBConnectivity
 
-def is_user_present(phoneNo):
+def have_user_registered(phoneNo):
     con = DBConnectivity.create_connection();
     cur = DBConnectivity.create_cursor(con);
-    boolEmail = False;
+    bool_user_registered = True;
     sql_statement = "select count(*) from user where phoneNo =" + str(phoneNo);
     cur.execute(sql_statement)
     for count in cur:
@@ -19,9 +17,8 @@ def is_user_present(phoneNo):
         if count[0] ==  0:
             #print("hiiiii")
             cur.close()
-            boolEmail = True;
+            bool_user_registered = False;
             break;
     cur.close()
     #print(boolEmail)
-    return boolEmail;
-
+    return bool_user_registered;

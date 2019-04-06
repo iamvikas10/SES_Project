@@ -11,16 +11,37 @@ from classes.user import User
 
 def update_tableUser(user):
 	try:
-		con = DBConnectivity.createConnection();
-		cur = DBConnectivity.createCursor(con);
-		temp = "vikas"
-		sql_insert_query = """Insert Into user(`username`,`name`,`phone_no`,`email`,
-		`password`) values ('%s','%s','%s','%s','%s')""" % (user.get_userName(), 
-			user.get_name(), user.get_phoneNo(), user.get_email(),user.get_password())
+		con = DBConnectivity.create_connection();
+		cur = DBConnectivity.create_cursor(con);
+		sql_insert_query = """Insert Into user(`name`,`email`,`phoneNo`,
+		`password`) values ('%s','%s','%s',"%s")""" % ( 
+			user.get_name(), user.get_email(),user.get_phoneNo(), user.get_password())
+		#print(sql_insert_query)
 		cur.execute(sql_insert_query);
 		con.commit();
 		return True;
 	except customExceptions.DataNotUpdated as e:
+		print(e);
+	finally:
+		cur.close();
+		con.close();
+
+def user_details(phoneNo):
+	try:
+		con = DBConnectivity.create_connection();
+		cur = DBConnectivity.create_cursor(con);
+		sql_statement = "select * from user where phoneNo=" + str(phoneNo)
+		#print(sql_insert_query)
+		user = {}
+		cur.execute(sql_statement);
+		for row in cur:
+			user = {
+				'name':row[1],
+				'email':row[2],
+				'phoneNo':row[3]
+			}
+		return user;
+	except Exception as e:
 		print(e);
 	finally:
 		cur.close();

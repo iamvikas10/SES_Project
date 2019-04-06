@@ -7,7 +7,7 @@ Created Mar 18, 2019
 
 import mysql.connector
 from mysql.connector import Error
-def createConnection():
+def create_connection():
 	try:
 		connection = mysql.connector.connect(host='localhost',
                              database='ses',
@@ -18,7 +18,7 @@ def createConnection():
 	except Error as e :
 	    print ("Error while connecting to MySQL", e)
 
-def createCursor(con):
+def create_cursor(con):
 	try:
 		cursor = con.cursor();
 		return cursor;

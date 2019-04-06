@@ -7,35 +7,34 @@ from validations import regValidations
 from classes.user import User;
 from database import viewUpdateDB
 from exceptions import customExceptions;
+import base64;
 
 
-def userRegistration(userName, name, phoneNo, email, password, confirmPassword):
+def user_registration(name, phoneNo, email, password):
     usr=User();
-    user = {'userName' : userName, 'name' : name, 'phoneNo' : phoneNo, 'email' : email}
-    usr.set_userName(userName);
+    body_message = {
+        'isError':False,
+        'msg':'User Successfully Registered'
+    }
     usr.set_name(name);
-    usr.set_phoneNo(phoneNo);
-    usr.set_email(email);
-    usr.set_password(password);
-    usr.set_confirmPassword(confirmPassword);
-    #is_data_valid=validate_methods.register_validations(a);
-    try:
-        if(regValidations.validate_userName(usr)):
-            if(regValidations.validate_password(usr)):
-                if(regValidations.validate_confirmPassword(usr)):
-                    if(regValidations.validate_email(usr)):
-                        if(regValidations.validate_phoneNo(usr)):
-                            if(regValidations.validate_name(usr)):
-                                updateDB=viewUpdateDB.update_tableUser(usr)
-                                if(updateDB==True):
-                                    return user;
-                                else:
-                                    return "Error in Validations"
-                                        
-    except customExceptions.InvalidConfirmPasswordException as e:
-        print(e)
-    except customExceptions.InvalidMobileNumberException as e:
-        print(e)
-    except customExceptions.InvalidPasswordException as e:
-        print(e)
-    
+    usr.set_phoneNo(int(phoneNo));
+    validateEmail = regValidations.is_user_present(phoneNo);
+   # print(validateEmail)
+    if(validateEmail == True):
+        usr.set_email(email);
+    else:
+        body_message['isError'] = True;
+        body_message['msg'] = 'User Already Registered. Kindly login'
+    pwd = str(user_encode_password(password));
+    usr.set_password(str(pwd));
+    print(type(usr.get_password()))
+    if(body_message['isError']==False):
+        updateDB=viewUpdateDB.update_tableUser(usr)
+    return body_message;
+
+def user_encode_password(password):
+    password = password.encode()
+    return base64.b64encode(password);
+
+def user_decode_password(password):
+    return base64.b64decode(password);

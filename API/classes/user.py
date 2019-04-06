@@ -7,12 +7,10 @@ Created on Mar 18, 2019
 
 class User:
 	def __init__(self):
-		self.__userName = None;
 		self.__name = None;
 		self.__phoneNo = None;
 		self.__email = None;
 		self.__password = None;
-		self.__confirmPassword = None;
 
 	def get_userName(self):
 		return self.__userName; 
@@ -39,7 +37,3 @@ class User:
 	def set_password(self, value):
 		self.__password= value;
 
-	def get_confirmPassword(self):
-		return self.__confirmPassword;
-	def set_confirmPassword(self, value):
-		self.__confirmPassword = value;
