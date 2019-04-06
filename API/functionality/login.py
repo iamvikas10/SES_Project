@@ -3,6 +3,7 @@ from validations.loginValidations import have_user_registered
 from functionality import registration
 from database import loginDatabase
 
+#function to check weather login password entered by the user is correct
 def is_login_password_correct(mobile_number,password):
 	pwd = str(registration.user_encode_password(password));
 	#print(loginDatabase.get_password(mobile_number))
@@ -11,6 +12,7 @@ def is_login_password_correct(mobile_number,password):
 		return True
 	else:
 		return False
+
 def login_module(mobileNo, password):
 	body_response = {
 		'isError':False,

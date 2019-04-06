@@ -8,6 +8,7 @@ from exceptions import customExceptions
 import re
 from utility import DBConnectivity
 
+#function to check weather user is present or not
 def is_user_present(phoneNo):
     con = DBConnectivity.create_connection();
     cur = DBConnectivity.create_cursor(con);

@@ -14,7 +14,8 @@ def createApp():
 	@app.route('/serverTest')
 	def checkServer():
 		return "Server Up and Running";
-
+		
+	#api for registration part
 	@app.route('/registration', methods = ['POST'])
 	def registration():
 		name = request.json['name'];
@@ -23,7 +24,11 @@ def createApp():
 		password = request.json['password'];
 		respData = user_registration(name, phoneNo, email, password);
 		return jsonify(respData), 200;
-
+	''' 
+		login api: Please refer to doc for endpoints
+		jsonify : for making response object
+		encode: mobileNo is the payload passed on which secret key works
+	'''
 	@app.route('/login', methods = ['POST'])
 	def login():
 		phoneNo = request.json['phoneNo'];
@@ -38,13 +43,15 @@ def createApp():
 			resp.headers['Authorization']=token;
 		return resp,200;
 
-	@app.route('/userDetails',methods = ['POST'])
+	#just for checking we dont need this in any of the screens
+	@app.route('/userDetails',methods = ['POST']) 
 	def user_details():
 		phoneNo = request.json['phoneNo']
 		respData = authentication.get_user_details(phoneNo);
 		resp = jsonify(respData)
 		return resp,200;
 
+	#api for authorization
 	@app.route('/authorization', methods =['POST'])
 	def authorize_user():
 		token = request.headers['Authorization'][7:]

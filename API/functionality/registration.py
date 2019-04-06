@@ -9,7 +9,7 @@ from database import viewUpdateDB
 from exceptions import customExceptions;
 import base64;
 
-
+#function for user_registration
 def user_registration(name, phoneNo, email, password):
     usr=User();
     body_message = {
@@ -32,9 +32,11 @@ def user_registration(name, phoneNo, email, password):
         updateDB=viewUpdateDB.update_tableUser(usr)
     return body_message;
 
+#function for base64 encryption of password
 def user_encode_password(password):
     password = password.encode()
     return base64.b64encode(password);
 
+#function for base64 decryption of password
 def user_decode_password(password):
     return base64.b64decode(password);

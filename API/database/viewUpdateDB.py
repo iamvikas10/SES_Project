@@ -9,6 +9,8 @@ from utility import DBConnectivity
 from exceptions import customExceptions
 from classes.user import User
 
+
+#This function is to insert the details of user into the SQL table.
 def update_tableUser(user):
 	try:
 		con = DBConnectivity.create_connection();
@@ -26,6 +28,9 @@ def update_tableUser(user):
 		cur.close();
 		con.close();
 
+'''this function is to fetch the details of the user from the sql table.
+   returns a dictonary containing user details
+'''
 def user_details(phoneNo):
 	try:
 		con = DBConnectivity.create_connection();

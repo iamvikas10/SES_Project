@@ -3,4 +3,5 @@
 create database ses;
 use ses;
 
-create table user(user_id int primary key auto_increment, username varchar(25) unique, name varchar(100), phone_no int(11), email varchar(75), password varchar(30));
+create table user(userID int primary key auto_increment, name varchar(25), email varchar(255), phoneNo varchar(13), password varchar(255));
+

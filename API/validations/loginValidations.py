@@ -6,6 +6,7 @@ Created on 4 April, 2019
 from classes.user import User
 from utility import DBConnectivity
 
+#function to check weather user have registered or not
 def have_user_registered(phoneNo):
     con = DBConnectivity.create_connection();
     cur = DBConnectivity.create_cursor(con);

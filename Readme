@@ -1,0 +1,5 @@
+1. navigate to sql.txt for database schema of user.
+2. put all api code into app.py
+3. push only to dev branch
+4. maintain the file structure as it is(so that no problem in merging)
+5. Please follow the setting up environment.txt file under utility folder to set up the files.
