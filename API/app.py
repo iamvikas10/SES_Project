@@ -69,9 +69,18 @@ def createApp():
     def parking_map():
       areaID  = request.json['areaID']
       #slot_num = request.json['slot_num']
-      area_slot_status = parkingmap.getAreaStatus(areaID)
-      resp = jsonify(area_slot_status)
-      return resp ,200
+      resp1 = {
+			"isError": True,
+			"msg": "You are not authorized to view"
+		}
+      token = request.headers['Authorization'][7:]
+      var = authentication.authorization(token);
+      if (var['isAuthenticated'] == True):
+          area_slot_status = parkingmap.getAreaStatus(areaID)
+          resp = jsonify(area_slot_status)
+          return resp ,200
+      else:
+          return jsonify(resp1), 200
     return app;   
 
 
