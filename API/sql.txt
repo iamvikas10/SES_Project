@@ -5,3 +5,32 @@ use ses;
 
 create table user(userID int primary key auto_increment, name varchar(25), email varchar(255), phoneNo varchar(13), password varchar(255));
 
+<<<<<<< HEAD
+CREATE TABLE `ParkingArea_Table` (
+  `Id` varchar(45) DEFAULT NULL,
+  `Name` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `Prebooking_Table` (
+  `slotNo` int(100) DEFAULT NULL,
+  `phoneNO` varchar(45) DEFAULT NULL,
+  `rcNo` varchar(45) DEFAULT NULL,
+  `expectedArrivalTime` datetime DEFAULT NULL,
+  `ArrivalTime` datetime DEFAULT NULL,
+  `bookingStatus` varchar(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `Booking_History` (
+  `ParkingArea_Id` int(11) NOT NULL,
+  `slotNo` int(11) DEFAULT NULL,
+  `Exit_Time` datetime DEFAULT NULL,
+  `Entry_Time` date DEFAULT NULL,
+  `Amount` int(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into Booking_History values('PA1',1,'2018-03-21 11:36:14.840','2018-03-21 12:36:14.840',100);
+=======
+create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
+
+>>>>>>> 39fc74b772071d80bbca7b9acc47fa376ee9459a
