@@ -5,3 +5,5 @@ use ses;
 
 create table user(userID int primary key auto_increment, name varchar(25), email varchar(255), phoneNo varchar(13), password varchar(255));
 
+create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
+

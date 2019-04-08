@@ -1,10 +1,4 @@
-'''
-Created Mar 18, 2019
-
-@author: iamvikas10
-
-'''
-
+# -*- coding: utf-8 -*-
 import mysql.connector
 from mysql.connector import Error
 
@@ -27,4 +21,6 @@ def create_cursor(con):
 		return cursor;
 	except Error as e:
 		print("Error While Connecting to MySQL", e)
+
+
 
