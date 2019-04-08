@@ -35,6 +35,7 @@ def createApp():
 		password = request.json['password'];
 		respData = login_module(phoneNo,password);
 		print(respData)
+		resp = jsonify(respData)
 		if(respData['isError']==False):
 			user = viewUpdateDB.user_details(phoneNo)
 			secret_key = 'SESProject';
