@@ -141,8 +141,16 @@ def createApp():
              if (var['isAuthenticated'] == True):
                  user_details=authentication.get_user_details_through_token(token)
                  phoneNo = user_details['phoneNo'];
-                 respData = cars_details.car_details_func(phoneNo,rcNo,carModel)
-                 return jsonify(respData) , 200
+                 checkCarExists = cars_details.get_car_details(phoneNo)
+                 #print(checkCarExists)
+                 if(len(checkCarExists.keys())==0):
+                     print("Debugging addinng first car")
+                     respData = cars_details.car_details_func(phoneNo,rcNo,carModel)
+                     return jsonify(respData) , 200
+                 else:
+                     print("Debugging updating car")
+                     respData = cars_details.edit_car_details(phoneNo,rcNo,carModel)
+                     return jsonify(respData) , 200
              else:
                  return jsonify(resp), 200
         elif request.method == 'GET':
@@ -156,28 +164,10 @@ def createApp():
                  user_details=authentication.get_user_details_through_token(token)
                  phoneNo = user_details['phoneNo'];
                  respData = cars_details.get_car_details(phoneNo)
+                 print(len(respData.keys()))
                  return jsonify(respData) , 200
              else:
                  return jsonify(resp) , 200
-    
-    @app.route('/editCarDetails',methods=['POST'])
-    def edit_car_details():
-        if request.method == 'POST':
-             resp= {
-            "isError": True,
-            "msg": "You are not authorized to view"
-             }
-             rcNo = request.json['rcNo']
-             carModel = request.json['carModel']
-             token = request.headers['Authorization'][7:]
-             var = authentication.authorization(token);
-             if (var['isAuthenticated'] == True):
-                 user_details=authentication.get_user_details_through_token(token)
-                 phoneNo = user_details['phoneNo'];
-                 respData = cars_details.edit_car_details(phoneNo,rcNo,carModel)
-                 return jsonify(respData) , 200
-             else:
-                 return jsonify(resp), 200
         
     
     #just for initializing 
