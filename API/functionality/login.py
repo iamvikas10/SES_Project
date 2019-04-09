@@ -21,12 +21,15 @@ def login_module(mobileNo, password):
 	}
 
 	check_user_registered = have_user_registered(mobileNo);
+	print(check_user_registered);
 	if(check_user_registered):
 		if(is_login_password_correct(mobileNo, password)):
 			return body_response;
 		else:
 			body_response['isError']=True;
 			body_response['msg']='Your password is incorrect. Please login Again'
+			return body_response
 	else:
 		body_response['isError']=True;
 		body_response['msg']='You have not registered'
+		return body_response

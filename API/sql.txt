@@ -29,7 +29,6 @@ CREATE TABLE `Booking_History` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 insert into Booking_History values('PA1',1,'2018-03-21 11:36:14.840','2018-03-21 12:36:14.840',100);
-=======
 create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
 
 create table car_details(phoneNo varchar(20) not null,rcNo varchar(45) not null, carModel varchar(40) not null)
