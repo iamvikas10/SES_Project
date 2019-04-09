@@ -5,7 +5,6 @@ use ses;
 
 create table user(userID int primary key auto_increment, name varchar(25), email varchar(255), phoneNo varchar(13), password varchar(255));
 
-<<<<<<< HEAD
 CREATE TABLE `ParkingArea_Table` (
   `Id` varchar(45) DEFAULT NULL,
   `Name` varchar(45) DEFAULT NULL
@@ -16,7 +15,7 @@ CREATE TABLE `Prebooking_Table` (
   `phoneNO` varchar(45) DEFAULT NULL,
   `rcNo` varchar(45) DEFAULT NULL,
   `expectedArrivalTime` datetime DEFAULT NULL,
-  `ArrivalTime` datetime DEFAULT NULL,
+  `ArrivalTime` datetime DEFAULT '0000-00-00 00:00:00',
   `bookingStatus` varchar(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -33,4 +32,5 @@ insert into Booking_History values('PA1',1,'2018-03-21 11:36:14.840','2018-03-21
 =======
 create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
 
->>>>>>> 39fc74b772071d80bbca7b9acc47fa376ee9459a
+create table car_details(phoneNo varchar(20) not null,rcNo varchar(45) not null, carModel varchar(40) not null)
+
