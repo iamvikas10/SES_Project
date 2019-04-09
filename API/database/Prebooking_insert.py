@@ -13,7 +13,12 @@ def update_tablePrebook(Prebooking):
 		) values ('%s','%s',"%s",'%s',"%s",'%s','%s')""" % (
 			Prebooking.get_slotNo(), Prebooking.get_phoneNo(),Prebooking.get_ExpectedArrival(),Prebooking.get_rcNo(), Prebooking.get_ExactArrival(),Prebooking.get_bookingStatus(),Prebooking.get_AreaId())
 		#print(sql_insert_query)
+		sql_insert_query_currentBooking = """Insert Into Current_booking(`slotNo`,`phoneNO`,`rcNo`,`ArrivalTime`,`BookingStatus`,`AreaId`
+				) values ('%s','%s',"%s",'%s',"%s",'%s')""" % (Prebooking.get_slotNo(), Prebooking.get_phoneNo(), Prebooking.get_rcNo(),
+			Prebooking.get_ExactArrival(), Prebooking.get_bookingStatus(), Prebooking.get_AreaId())
+		# print(sql_insert_query)
 		cur.execute(sql_insert_query);
+		cur.execute(sql_insert_query_currentBooking);
 		con.commit();
 		return True;
 	except customExceptions.DataNotUpdated as e:

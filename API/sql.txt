@@ -34,3 +34,13 @@ insert into Booking_History values('PA1',1,'2018-03-21 11:36:14.840','2018-03-21
 create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
 
 >>>>>>> 39fc74b772071d80bbca7b9acc47fa376ee9459a
+
+
+CREATE TABLE `Current_booking` (
+  `slotNo` int(100) DEFAULT NULL,
+  `phoneNo` varchar(45) DEFAULT NULL,
+  `rcNo` varchar(45) DEFAULT NULL,
+  `ArrivalTime` datetime DEFAULT NULL,
+  `BookingStatus` varchar(45) DEFAULT NULL,
+  `AreaId` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
