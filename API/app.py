@@ -1,11 +1,17 @@
 from flask import Flask
-from flask import request, jsonify,Response
+from flask import request, jsonify,Response,json
 from flask import render_template
+import datetime
 from functionality.registration import user_registration
 from functionality.login import login_module
 from functionality import authentication
 from database import viewUpdateDB
+from database import Prebooking_insert
 import jwt
+from functionality.home import home_module
+from functionality.Prebooking import Prebooking_module
+from functionality.Booking_history import history_module
+
 
 def createApp():
 
@@ -50,6 +56,72 @@ def createApp():
 		respData = authentication.get_user_details(phoneNo);
 		resp = jsonify(respData)
 		return resp,200;
+	#for parking area screens
+	@app.route('/home', methods=['GET'])
+	def home():
+		resp = {
+			"isError":True,
+			"msg":"You are not authorized to view"
+		}
+		token = request.headers['Authorization'][7:]
+		var = authentication.authorization(token);
+		if(var['isAuthenticated']==True):
+			respData = home_module();
+			return json.dumps(respData), 200
+		else:
+			return jsonify(resp), 200
+
+	# for prebooking
+	@app.route('/prebooking', methods=['POST'])
+	def prebooking():
+		resp= {
+			"isError": True,
+			"msg": "You are not authorized to view"
+		}
+		slotNo = request.json['slotNo'];
+
+		rcNo = request.json['rcNo']
+		ExpectedArrivalTime = request.json['ExpectedArrivalTime'];
+		ArrivalTime = request.json['ArrivalTime'];
+		bookingStatus = ""
+		AreaId = request.json['AreaId']
+		expectedTime = datetime.datetime.strptime(ExpectedArrivalTime, '%Y-%m-%d %H:%M:%S')
+		Time_Arrived = datetime.datetime.strptime(ArrivalTime, '%Y-%m-%d %H:%M:%S')
+		print(Time_Arrived)
+		d = Time_Arrived - expectedTime
+		if d.seconds >= 600:
+			bookingStatus = "NO"
+		else:
+			bookingStatus = "YES"
+		token = request.headers['Authorization'][7:]
+		var = authentication.authorization(token);
+		if (var['isAuthenticated'] == True):
+			user_details=authentication.get_user_details_through_token(token)
+			phoneNo = user_details['phoneNo'];
+			respData = Prebooking_module(slotNo, phoneNo, rcNo, ExpectedArrivalTime, ArrivalTime, bookingStatus,AreaId);
+			return jsonify(respData), 200;
+
+		else:
+			return jsonify(resp), 200
+
+
+
+
+	@app.route('/Booking_history', methods=['GET'])
+	def Booking_History():
+		resp = {
+			"isError": True,
+			"msg": "You are not authorized to view"
+		}
+		token = request.headers['Authorization'][7:]
+		var = authentication.authorization(token);
+		if (var['isAuthenticated'] == True):
+			respData = history_module();
+			return json.dumps(respData), 200
+		else:
+			return jsonify(resp), 200
+
+
 
 	#api for authorization
 	@app.route('/authorization', methods =['POST'])

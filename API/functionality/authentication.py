@@ -27,3 +27,11 @@ def decode_token(token):
 	secret_key = 'SESProject';
 	decoded_token = jwt.decode(token,secret_key, algorithms = 'HS256')
 	return decoded_token
+
+def get_user_details_through_token(token):
+	try:
+		decoded_token = decode_token(token)
+		user_details = get_user_details(decoded_token['mobileNo']);
+		return user_details;
+	except Exception as e:
+		print(e)

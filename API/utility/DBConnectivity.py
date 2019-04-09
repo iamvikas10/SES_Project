@@ -14,7 +14,7 @@ def create_connection():
 		connection = mysql.connector.connect(host='localhost',
                              database='ses',
                              user='root',
-                             password='0nline@1234')
+                             password='')
 		print(connection);
 		return connection;
 	except Error as e :
