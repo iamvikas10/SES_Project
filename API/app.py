@@ -25,10 +25,6 @@ def createApp():
 	@app.route('/serverTest')
 	def checkServer():
 		return "Server Up and Running";
-
-
-
-
 	#for parking area screens
 	@app.route('/home', methods=['GET'])
 	def home():
@@ -97,12 +93,12 @@ def createApp():
 		respData = login_module(phoneNo,password);
 		print(respData)
 		if(respData['isError']==False):
-			user = viewUpdateDB.user_details(phoneNo)
 			secret_key = 'SESProject';
 			token = jwt.encode({'mobileNo':phoneNo},secret_key, algorithm = 'HS256');
 			resp = jsonify(respData)
 			resp.headers['Authorization']=token;
 			return resp,200;
+		return jsonify(respData),200;
 
     #just for checking we dont need this in any of the screens
 	@app.route('/userDetails',methods = ['POST'])
@@ -124,9 +120,6 @@ def createApp():
 		token = request.headers['Authorization'][7:]
 		auth = authentication.authorization(token);
 		return jsonify(auth);
-
-
-
 
 	@app.route('/Booking_history', methods=['GET'])
 	def Booking_History():

@@ -11,7 +11,7 @@ def have_user_registered(phoneNo):
     con = DBConnectivity.create_connection();
     cur = DBConnectivity.create_cursor(con);
     bool_user_registered = True;
-    sql_statement = "select count(*) from user where phoneNo =" + str(phoneNo);
+    sql_statement = "select count(*) from user where `phoneNo` ='%s'" % str(phoneNo);
     cur.execute(sql_statement)
     for count in cur:
         #print(count[0])
