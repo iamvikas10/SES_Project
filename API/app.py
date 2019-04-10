@@ -5,9 +5,11 @@ import datetime
 from functionality.registration import user_registration
 from functionality.login import login_module
 from functionality import parkingmap
+from functionality import currentbooking
 from functionality import authentication
-
 from database import viewUpdateDB
+from database import Prebooking_insert
+from functionality import cars_details
 from database import Prebooking_insert
 from database import viewUpdateDB, parkingDatabase
 
@@ -18,7 +20,6 @@ from functionality.Booking_history import history_module
 
 
 def createApp():
-
 
 	app = Flask(__name__)   #app initialization
 
@@ -41,7 +42,7 @@ def createApp():
 			return jsonify(resp), 200
 
 	# for prebooking
-	@app.route('/prebooking', methods=['POST'])
+	@app.route('/preBooking', methods=['POST'])
 	def prebooking():
 		resp= {
 			"isError": True,
@@ -81,7 +82,7 @@ def createApp():
 		password = request.json['password'];
 		respData = user_registration(name, phoneNo, email, password);
 		return jsonify(respData), 200;
-	''' 
+	'''
         login api: Please refer to doc for endpoints
         jsonify : for making response object
         encode: mobileNo is the payload passed on which secret key works
@@ -121,7 +122,7 @@ def createApp():
 		auth = authentication.authorization(token);
 		return jsonify(auth);
 
-	@app.route('/Booking_history', methods=['GET'])
+	@app.route('/bookingHistory', methods=['GET'])
 	def Booking_History():
 		resp = {
 			"isError": True,
@@ -133,9 +134,85 @@ def createApp():
 			respData = history_module();
 			return json.dumps(respData), 200
 		else:
+			return jsonify(resp), 200\
+
+	@app.route('/currentBooking',methods=['GET'])
+	def current_booking():
+		resp= {
+            "isError": True,
+            "msg": "You are not authorized to view"
+        }
+		token = request.headers['Authorization'][7:]
+		var = authentication.authorization(token);
+		if (var['isAuthenticated'] == True):
+			user_details=authentication.get_user_details_through_token(token)
+			phoneNo = user_details['phoneNo'];
+			respData = currentbooking.currentbookingdetails(phoneNo)
+			return jsonify(respData) , 200
+		else:
 			return jsonify(resp), 200
+	@app.route('/carDetails',methods=['POST','GET'])
+	def car_details():
+		if request.method == 'POST':
+			resp= {
+            	"isError": True,
+            	"msg": "You are not authorized to view"
+        	}
+			rcNo = request.json['rcNo']
+			carModel = request.json['carModel']
+			token = request.headers['Authorization'][7:]
+			var = authentication.authorization(token);
+			if (var['isAuthenticated'] == True):
+				user_details=authentication.get_user_details_through_token(token)
+				phoneNo = user_details['phoneNo'];
+				checkCarExists = cars_details.get_car_details(phoneNo)
+				if(len(checkCarExists.keys())==0):
+					print("Debugging addinng first car")
+					respData = cars_details.car_details_func(phoneNo,rcNo,carModel)
+					return jsonify(respData) , 200
+				else:
+					print("Debugging updating car")
+					respData = cars_details.edit_car_details(phoneNo,rcNo,carModel)
+					return jsonify(respData) , 200
+			else:
+				return jsonify(resp), 200
+		elif request.method == 'GET':
+			resp= {
+            	"isError": True,
+            	"msg": "You are not authorized to view"
+            }
+			carRespDetails = {
+				"rcNo": None,
+				"carModel": None
+			}
+			token = request.headers['Authorization'][7:]
+			var = authentication.authorization(token);
+			if (var['isAuthenticated'] == True):
+				user_details = authentication.get_user_details_through_token(token)
+				phoneNo = user_details['phoneNo'];
+				respData = cars_details.get_car_details(phoneNo)
+				if (len(respData.keys()) == 0):
+					return jsonify(carRespDetails), 200
+				else:
+					return jsonify(respData), 200
+			else:
+				return jsonify(resp), 200
 
-
+	@app.route('/parkingMap/<areaID>',methods = ['GET'])
+	def parking_map(areaID):
+      #slot_num = request.json['slot_num']
+		resp1 = {
+            "isError": True,
+            "msg": "You are not authorized to view"
+        }
+		token = request.headers['Authorization'][7:]
+		var = authentication.authorization(token);
+		if (var['isAuthenticated'] == True):
+			area_slot_status = parkingmap.getAreaStatus(areaID)
+			resp = jsonify(area_slot_status)
+			return resp ,200
+		else:
+			return jsonify(resp1), 200
 
 	return app
 
