@@ -1,9 +1,11 @@
 from flask import Flask
 import requests
+from database.viewUpdateDB import arrivalTime
+from database.cardDetailsDB import reg_car_details
 from flask import request, jsonify,Response,json
 from flask import render_template
 from functionality import slotBooking
-import datetime
+import datetime,time
 from functionality.registration import user_registration
 from functionality.login import login_module
 from functionality import parkingmap
@@ -13,8 +15,7 @@ from database import viewUpdateDB
 from database import Prebooking_insert
 from functionality import cars_details
 from functionality import exitParking
-from database import Prebooking_insert
-from database import viewUpdateDB, parkingDatabase
+from database import viewUpdateDB, parkingDatabase,Prebooking_insert
 import urllib
 import jwt
 from functionality.home import home_module
@@ -52,28 +53,45 @@ def createApp():
             "isError": True,
             "msg": "You are not authorized to view"
         }
+        AreaId = request.json['areaID']
         slotNo = request.json['slotNo'];
 
-        rcNo = request.json['rcNo']
-        ExpectedArrivalTime = request.json['ExpectedArrivalTime'];
-        ArrivalTime = request.json['ArrivalTime'];
+        #det = request.json['rcNo']
+        ExpectedArrivalTime = request.json['expectedArrival'];
+        #ArrivalTime = request.json['ArrivalTime'];
         bookingStatus = ""
-        AreaId = request.json['AreaId']
+        #print(ExpectedArrivalTime)
         expectedTime = datetime.datetime.strptime(ExpectedArrivalTime, '%Y-%m-%d %H:%M:%S')
-        Time_Arrived = datetime.datetime.strptime(ArrivalTime, '%Y-%m-%d %H:%M:%S')
-        print(Time_Arrived)
-        d = Time_Arrived - expectedTime
-        if d.seconds >= 600:
-            bookingStatus = "NO"
-        else:
-            bookingStatus = "YES"
+        #Time_Arrived = datetime.datetime.strptime(ArrivalTime, '%Y-%m-%d %H:%M:%S')
+        
+        time2 = time.time()
+        print(time2)
+        #time2 = datetime.datetime.strptime(time2, '%Y-%m-%d %H:%M:%S')
+        st = datetime.datetime.fromtimestamp(time2).strftime('%Y-%m-%d %H:%M:%S')
+        print(st)
+        #d = time2 - expectedTime
+        
+# =============================================================================
+#         if d.seconds >= 600:
+#             bookingStatus = "NO"
+#         else:
+#             bookingStatus = "YES"
+# =============================================================================
         token = request.headers['Authorization'][7:]
         var = authentication.authorization(token);
         if (var['isAuthenticated'] == True):
             user_details=authentication.get_user_details_through_token(token)
             phoneNo = user_details['phoneNo'];
-            respData = Prebooking_module(slotNo, phoneNo, rcNo, ExpectedArrivalTime, ArrivalTime, bookingStatus,AreaId);
-            return jsonify(respData), 200;
+            details = reg_car_details(phoneNo)
+            rcNo = details["rcNo"]
+            bookingStatus = 1
+            respData = Prebooking_module(slotNo, phoneNo, rcNo, ExpectedArrivalTime,bookingStatus,AreaId);
+            time.sleep(30)
+            arrivTime=arrivalTime(phoneNo)
+            ArrivalTime = arrivTime["arrivalTime"]
+            if ArrivalTime is None:
+                Prebooking_insert.updateBookingStatus(phoneNo)
+                return jsonify(respData), 200;
 
         else:
             return jsonify(resp), 200
@@ -201,7 +219,9 @@ def createApp():
         token = request.headers['Authorization'][7:]
         var = authentication.authorization(token);
         if (var['isAuthenticated'] == True):
-            respData = history_module();
+            user_details=authentication.get_user_details_through_token(token)
+            phoneNo = user_details['phoneNo'];
+            respData = history_module(phoneNo);
             return json.dumps(respData), 200
         else:
             return jsonify(resp), 200
@@ -283,7 +303,7 @@ def createApp():
             return resp ,200
         else:
             return jsonify(resp1), 200
-
+        
     return app
 
 
