@@ -113,7 +113,7 @@ def createApp():
         resp = jsonify(respData)
         return resp,200;
 
-    @app.route('/currentbooking',methods=['GET'])
+    @app.route('/currentBooking',methods=['GET'])
     def current_booking():
         resp= {
             "isError": True,
@@ -130,7 +130,7 @@ def createApp():
           return jsonify(resp), 200
    
     
-    @app.route('/cardetails',methods=['POST','GET'])
+    @app.route('/carDetails',methods=['POST','GET'])
     def car_details():
         if request.method == 'POST':
              resp= {
@@ -264,8 +264,6 @@ def createApp():
             return jsonify(msg);
         else:
             return jsonify(resp), 200
-        
-    return app; 
 
 
     @app.route('/parkingMap/<areaID>',methods = ['GET'])

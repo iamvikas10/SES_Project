@@ -15,7 +15,7 @@ def create_connection():
                              database='ses',
                              user='root',
 
-                             password='')
+                             password='0nline@1234')
 
 		return connection;
 	except Error as e :
