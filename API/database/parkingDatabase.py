@@ -57,10 +57,13 @@ def slotStatus(ID):
       cur.execute(sql_statement)
       result = cur.fetchall()
       info_list = []
+      flag=0;
       for row in result:
           info_list.append(row[0])
-          if(len(info_list)%5 ==0):
+          flag+=1;
+          if(flag %4 ==0):
               info_list.append("\n")
+              flag=0;
       print(info_list)
       return "".join(info_list)
      except Exception as e:
@@ -73,7 +76,7 @@ def initSlots():
     try:
         con = DBConnectivity.create_connection();
         cur = DBConnectivity.create_cursor(con);
-        num_slots = [5,10,10,5,5,10]
+        num_slots = [16,16,16,16,16,16]
         count = 0
         area = ['A','B','C','D','E','F']
         status = 'A'

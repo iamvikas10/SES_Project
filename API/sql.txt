@@ -10,13 +10,18 @@ CREATE TABLE `ParkingArea_Table` (
   `Name` varchar(45) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+insert into ParkingArea_Table values("PA1","Area1"), ("PA2","Area2"),("PA3","Area3"),("PA4","Area4"),("PA5","Area5"),("PA6","Area6")
+
 CREATE TABLE `Prebooking_Table` (
+   `preBookId` int primary key,
+  `areaNo` varchar(2) ,
   `slotNo` int(100) DEFAULT NULL,
   `phoneNO` varchar(45) DEFAULT NULL,
   `rcNo` varchar(45) DEFAULT NULL,
   `expectedArrivalTime` datetime DEFAULT NULL,
   `ArrivalTime` datetime DEFAULT '0000-00-00 00:00:00',
-  `bookingStatus` varchar(5) DEFAULT NULL
+  `bookingStatus` varchar(5) DEFAULT NULL,
+  `AreaId` varchar(45) default null
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -29,6 +34,7 @@ CREATE TABLE `Booking_History` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 insert into Booking_History values('PA1',1,'2018-03-21 11:36:14.840','2018-03-21 12:36:14.840',100);
+<<<<<<< HEAD
 create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
 //re run this query
  create table car_details(cid int primary key auto_increment, 
@@ -46,3 +52,20 @@ create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num 
   insert into booking values(1,'PA1','12', 'BR04','7903024586','2019-04-19 11:55:10',null,null,null, 1,0);
   
   
+=======
+
+create table parkingslottable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
+
+
+CREATE TABLE `Current_booking` (
+  `slotNo` int(100) DEFAULT NULL,
+  `phoneNo` varchar(45) DEFAULT NULL,
+  `rcNo` varchar(45) DEFAULT NULL,
+  `ArrivalTime` datetime DEFAULT NULL,
+  `BookingStatus` varchar(45) DEFAULT NULL,
+  `AreaId` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+create table car_details(phoneNo varchar(20) not null,rcNo varchar(45) not null, carModel varchar(40) not null)
+
+>>>>>>> 79611ecda5543617d00f56e7ebe59fa82a8354cb
