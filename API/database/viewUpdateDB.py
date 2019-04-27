@@ -51,3 +51,58 @@ def user_details(phoneNo):
 	finally:
 		cur.close();
 		con.close();
+        
+def arrivalTime(phoneNo):
+	try:
+		con = DBConnectivity.create_connection();
+		cur = DBConnectivity.create_cursor(con);
+		sql_statement = "select arrivalTime from booking where phoneNo=" + str(phoneNo)
+		#print(sql_insert_query)
+		arrivalTime = {}
+		cur.execute(sql_statement);
+		for row in cur:
+			arrivalTime = {
+				'arrivalTime':row[0],
+			       }
+		return arrivalTime;
+	except Exception as e:
+		print(e);
+	finally:
+		cur.close();
+		con.close();       
+        
+        
+        
+def update_tableBooking(arrivalTime, phoneNo ):
+	try:
+		con = DBConnectivity.create_connection();
+		cur = DBConnectivity.create_cursor(con);
+		sql_update_query = "update booking set arrivalTime='{}' where phoneNo='{}'".format(arrivalTime, phoneNo)
+		#print(sql_insert_query)
+		cur.execute(sql_update_query);
+		con.commit();
+		return True;
+	except customExceptions.DataNotUpdated as e:
+		print(e);
+	finally:
+		cur.close();
+		con.close();
+        
+        
+def update_tableBookingExit(exitTime, phoneNo,completeStatus,amount):
+	try:
+		con = DBConnectivity.create_connection();
+		cur = DBConnectivity.create_cursor(con);
+		sql_update_query = "update booking set exitTime='{}',completeStatus={},amount={} where phoneNo='{}'".format(exitTime,completeStatus,amount, phoneNo)
+		#print(sql_insert_query)
+		cur.execute(sql_update_query);
+		con.commit();
+		return True;
+	except customExceptions.DataNotUpdated as e:
+		print(e);
+	finally:
+		cur.close();
+		con.close();        
+        
+        
+        

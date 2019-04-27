@@ -25,6 +25,29 @@ def update_tablePrebook(Prebooking):
 '''this function is to fetch the details of the user from the sql table.
    returns a dictonary containing user details
 '''
+def book_details(phoneNo):
+    try:
+        con = DBConnectivity.create_connection();
+        cur = DBConnectivity.create_cursor(con);
+        sql = "select rcNo , preBookingStatus from booking where phoneNo ='{}'".format(phoneNo)
+        cur.execute(sql)
+        results = cur.fetchall()
+        details = {}
+        for row in results:
+            details = {
+                  'rcNo':row[0],
+                  'preBookingStatus':row[1]
+                  }
+        return details
+    except customExceptions.DataNotUpdated as e:
+        print(e);
+    finally:
+        cur.close();
+        con.close();
+
+
+
+
 
 # =============================================================================
 # def currentbook_details(phoneNo):

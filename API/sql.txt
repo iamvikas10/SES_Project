@@ -30,6 +30,19 @@ CREATE TABLE `Booking_History` (
 
 insert into Booking_History values('PA1',1,'2018-03-21 11:36:14.840','2018-03-21 12:36:14.840',100);
 create table parkingSlotTable(sid int primary key, areaID varchar(5) , slot_num int , status varchar(1))
-
-create table car_details(phoneNo varchar(20) not null,rcNo varchar(45) not null, carModel varchar(40) not null)
-
+//re run this query
+ create table car_details(cid int primary key auto_increment, 
+ rcNo varchar(45) unique, phoneNo varchar(20), carModel varchar(40), foreign key (phoneNo) references user(phoneNo) on update set null);
+ 
+ 
+ alter table user add constraint phoneNo unique(phoneNo);
+ 
+ create table booking(bid int primary key AUTO_INCREMENT,areaId varchar(20),slotNo varchar(20),rcNo varchar(20), 
+ foreign key (rcNo) references car_details(rcNo) on update set null,phoneNo varchar(20), foreign key (phoneNo) 
+ references user(phoneNo) on update set null ,
+ expectedArrivalTime datetime , arrivalTime datetime , exitTime datetime ,amount int,preBookingStatus boolean , 
+ completeStatus boolean);
+ 
+  insert into booking values(1,'PA1','12', 'BR04','7903024586','2019-04-19 11:55:10',null,null,null, 1,0);
+  
+  

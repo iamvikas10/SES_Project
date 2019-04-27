@@ -1,6 +1,8 @@
 from flask import Flask
+import requests
 from flask import request, jsonify,Response,json
 from flask import render_template
+from functionality import slotBooking
 import datetime
 from functionality.registration import user_registration
 from functionality.login import login_module
@@ -8,14 +10,16 @@ from functionality import parkingmap
 from functionality import currentbooking
 from functionality import authentication
 from functionality import cars_details
+from functionality import exitParking
 from database import Prebooking_insert
 
 from database import viewUpdateDB, parkingDatabase
-
+import urllib
 import jwt
 from functionality.home import home_module
 from functionality.Prebooking import Prebooking_module
 from functionality.Booking_history import history_module
+from functionality.slotBooking import getCurrentTime
 
 
 def createApp():
@@ -158,14 +162,20 @@ def createApp():
             "isError": True,
             "msg": "You are not authorized to view"
              }
+             carRespDetails ={
+                     "rcNo":None,
+                     "carModel": None
+             }
              token = request.headers['Authorization'][7:]
              var = authentication.authorization(token);
              if (var['isAuthenticated'] == True):
                  user_details=authentication.get_user_details_through_token(token)
                  phoneNo = user_details['phoneNo'];
                  respData = cars_details.get_car_details(phoneNo)
-                 print(len(respData.keys()))
-                 return jsonify(respData) , 200
+                 if(len(respData.keys())==0):
+                     return jsonify(carRespDetails), 200
+                 else:
+                     return jsonify(respData) , 200
              else:
                  return jsonify(resp) , 200
         
@@ -200,7 +210,7 @@ def createApp():
           return resp ,200
       else:
           return jsonify(resp1), 200
-    return app;   
+      
 
 
     @app.route('/Booking_history', methods=['GET'])
@@ -217,9 +227,67 @@ def createApp():
         else:
             return jsonify(resp), 200
 
+    
+    @app.route('/bookSlot',methods=['POST'])
+    def book_slot():
+        resp = {
+            "isError": True,
+            "msg": "You are not authorized to view"
+                }
+        parkingArea = request.json['parkingArea']
+        slotNumber = request.json['slotNumber']
+        #numberPlate = request.json['numberPlate']
+        url = 'http://192.168.137.121:5000/numberPlate';
+        response = requests.get(url)
+        jsonLoads= json.loads(response.content)
+        val=''
+        for key in jsonLoads:
+            val = jsonLoads[key]
+        numberPlate = val
+        print(val)
+        #numberPlate = 'abc'
+        token = request.headers['Authorization'][7:]
+        var = authentication.authorization(token);
+        if (var['isAuthenticated'] == True):
+            user_details=authentication.get_user_details_through_token(token)
+            phoneNo = user_details['phoneNo'];
+            respData = slotBooking.confirm_booking(phoneNo,parkingArea,slotNumber,numberPlate)
+            return jsonify(respData),200
+        else:
+            return jsonify(resp), 200
+    @app.route('/antimPlateDetection',methods=['GET'])
+    def generatedText():
+        url = 'http://192.168.137.121:5000/sendImageVal';
+        response = requests.get(url)
+        jsonLoads= json.loads(response.content)
+        val=''
+        for key in jsonLoads:
+            val = jsonLoads[key]
+        base64.b64decode(val)
+        return response, 200
+    @app.route('/exitParking',methods = ['GET'])
+    def exit_parking():
+        resp = {
+            "isError": True,
+            "msg": "You are not authorized to view"
+                }
+        #print("i am here")
+        exitTime = getCurrentTime();
+        
+        token = request.headers['Authorization'][7:]
+        var = authentication.authorization(token);
+        if (var['isAuthenticated'] == True):
+            user_details=authentication.get_user_details_through_token(token)
+            phoneNo = user_details['phoneNo'];
+            exitParking.updateExitTime(exitTime,phoneNo);
+            msg = {
+                "Time":"Car got exit"}
+            return jsonify(msg);
+        else:
+            return jsonify(resp), 200
+        
+    return app; 
 
-
-    #
 
 
 
