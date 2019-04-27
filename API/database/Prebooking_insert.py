@@ -4,22 +4,22 @@ from classes.prebooking import Prebooking
 
 
 #This function is to insert the details of prebooking into the SQL table.
-def update_tablePrebook(Prebooking):
+def update_tablePrebook(slotNo, phoneNo, rcNo, expectedArrivalTime,bookingStatus,AreaId):
 
 	try:
 		con = DBConnectivity.create_connection();
 		cur = DBConnectivity.create_cursor(con);
-		print(Prebooking.get_ExpectedArrival())
-		sql_insert_query = """Insert Into Prebooking_Table(`slotNo`,`phoneNO`,`expectedArrivalTime`,`rcNo`,`ArrivalTime`,`bookingStatus`,`AreaId`
-		) values ('%s','%s',"%s",'%s',"%s",'%s','%s')""" % (
-			Prebooking.get_slotNo(), Prebooking.get_phoneNo(),Prebooking.get_ExpectedArrival(),Prebooking.get_rcNo(), Prebooking.get_ExactArrival(),Prebooking.get_bookingStatus(),Prebooking.get_AreaId())
+		#print(Prebooking.get_ExpectedArrival())
+		sql_insert_query = """Insert Into booking(`areaId`,`slotNo`,`rcNo`,`phoneNo`,`expectedArrivalTime`,`preBookingStatus`
+		) values ('%s','%s',"%s",'%s',"%s",%s)""" % (
+			AreaId,slotNo,rcNo, phoneNo, expectedArrivalTime,bookingStatus)
 		#print(sql_insert_query)
-		sql_insert_query_currentBooking = """Insert Into Current_booking(`slotNo`,`phoneNO`,`rcNo`,`ArrivalTime`,`BookingStatus`,`AreaId`
-				) values ('%s','%s',"%s",'%s',"%s",'%s')""" % (Prebooking.get_slotNo(), Prebooking.get_phoneNo(), Prebooking.get_rcNo(),
-			Prebooking.get_ExactArrival(), Prebooking.get_bookingStatus(), Prebooking.get_AreaId())
+		 #sql_insert_query_currentBooking = """Insert Into Current_booking(`slotNo`,`phoneNO`,`rcNo`,`ArrivalTime`,`BookingStatus`,`AreaId`
+			#	) values ('%s','%s',"%s",'%s',"%s",'%s')""" % (Prebooking.get_slotNo(), Prebooking.get_phoneNo(), Prebooking.get_rcNo(),
+			#Prebooking.get_ExactArrival(), Prebooking.get_bookingStatus(), Prebooking.get_AreaId())
 		# print(sql_insert_query)
 		cur.execute(sql_insert_query);
-		cur.execute(sql_insert_query_currentBooking);
+		#ur.execute(sql_insert_query_currentBooking);
 		con.commit();
 		return True;
 	except customExceptions.DataNotUpdated as e:
@@ -31,6 +31,25 @@ def update_tablePrebook(Prebooking):
 '''this function is to fetch the details of the user from the sql table.
    returns a dictonary containing user details
 '''
+
+def  updateBookingStatus(phoneNo):
+    try:
+        con = DBConnectivity.create_connection();
+        cur = DBConnectivity.create_cursor(con);
+        sql_update_query = "update booking set preBookingStatus=0 where phoneNo='{}'".format(phoneNo)
+        cur.execute(sql_update_query);
+        con.commit();
+        return True;
+    except customExceptions.DataNotUpdated as e:
+        print(e);
+    finally:
+        cur.close();
+        con.close();
+    
+    
+    
+    
+    
 def book_details(phoneNo):
     try:
         con = DBConnectivity.create_connection();
