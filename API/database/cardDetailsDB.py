@@ -48,3 +48,22 @@ def reg_car_details(phoneNo):
     finally:
         cur.close();
         con.close();
+
+def getPhoneNumberThroughCar(rcNo):
+    try:
+        con = DBConnectivity.create_connection()
+        cur = DBConnectivity.create_cursor(con)
+        sql = "select phoneNo from car_details where rcNo = '{}'".format(rcNo)
+        cur.execute(sql)
+        result = cur.fetchall()
+        details = {}
+        for row in result:
+            details = {
+                  'phoneNo':row[0],
+                  }
+        return details['phoneNo']
+    except customExceptions.DataNotUpdated as e:
+        print(e);
+    finally:
+        cur.close();
+        con.close();

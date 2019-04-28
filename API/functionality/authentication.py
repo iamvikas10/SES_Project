@@ -1,4 +1,4 @@
-from database.viewUpdateDB import user_details
+from database.insertupdate import user_details
 import jwt
 
 #return the details of user in the form of dictionary

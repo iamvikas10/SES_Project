@@ -24,7 +24,7 @@ def create_connection():
 #function for creating cursor
 def create_cursor(con):
 	try:
-		cursor = con.cursor();
+		cursor = con.cursor(buffered=True);
 		return cursor;
 	except Error as e:
 		print("Error While Connecting to MySQL", e)

@@ -5,7 +5,7 @@ Created on Mar 18, 2019
 '''
 from validations import regValidations
 from classes.user import User;
-from database import viewUpdateDB
+from database import insertupdate
 from exceptions import customExceptions;
 import base64;
 
@@ -29,7 +29,7 @@ def user_registration(name, phoneNo, email, password):
     usr.set_password(str(pwd));
     print(type(usr.get_password()))
     if(body_message['isError']==False):
-        updateDB=viewUpdateDB.update_tableUser(usr)
+        updateDB=insertupdate.update_tableUser(usr)
     return body_message;
 
 #function for base64 encryption of password

@@ -78,7 +78,7 @@ def initSlots():
         cur = DBConnectivity.create_cursor(con);
         num_slots = [16,16,16,16,16,16]
         count = 0
-        area = ['A','B','C','D','E','F']
+        area = ['PA1','PA2','PA3','PA4','PA5','PA6']
         status = 'A'
         for i in range(len(area)):
             for j in range(num_slots[i]):

@@ -1,6 +1,6 @@
 from flask import Flask
 import requests
-from database.viewUpdateDB import arrivalTime
+from database.insertupdate import arrivalTime
 from database.cardDetailsDB import reg_car_details
 from flask import request, jsonify,Response,json
 from flask import render_template
@@ -11,22 +11,24 @@ from functionality.login import login_module
 from functionality import parkingmap
 from functionality import currentbooking
 from functionality import authentication
-from database import viewUpdateDB
+from database import insertupdate,cardDetailsDB
 from database import Prebooking_insert
 from functionality import cars_details
 from functionality import exitParking
-from database import viewUpdateDB, parkingDatabase,Prebooking_insert
+from database import insertupdate, parkingDatabase,Prebooking_insert
 import urllib
 import jwt
 from functionality.home import home_module
 from functionality.Prebooking import Prebooking_module
 from functionality.Booking_history import history_module
 from functionality.slotBooking import getCurrentTime
+from functionality.changeSlotStatus import changeSlotStatus
+from database.insertupdate import checkSlotAvailability
 
 
 def createApp():
 
-    app = Flask(__name__)   #app initialization
+    app = Flask(__name__)   #app initialization    
 
     @app.route('/serverTest')
     def checkServer():
@@ -53,7 +55,7 @@ def createApp():
             "isError": True,
             "msg": "You are not authorized to view"
         }
-        AreaId = request.json['areaID']
+        AreaId = request.json['areaID'];
         slotNo = request.json['slotNo'];
 
         #det = request.json['rcNo']
@@ -61,16 +63,17 @@ def createApp():
         #ArrivalTime = request.json['ArrivalTime'];
         bookingStatus = ""
         #print(ExpectedArrivalTime)
-        expectedTime = datetime.datetime.strptime(ExpectedArrivalTime, '%Y-%m-%d %H:%M:%S')
+        expectedTime = datetime.datetime.strptime(ExpectedArrivalTime, '%Y-%m-%d %H:%M')
         #Time_Arrived = datetime.datetime.strptime(ArrivalTime, '%Y-%m-%d %H:%M:%S')
-        
+        slotStatus = "R"
+        changeSlotStatus(AreaId, slotNo, slotStatus)
         time2 = time.time()
         print(time2)
         #time2 = datetime.datetime.strptime(time2, '%Y-%m-%d %H:%M:%S')
-        st = datetime.datetime.fromtimestamp(time2).strftime('%Y-%m-%d %H:%M:%S')
+        st = datetime.datetime.fromtimestamp(time2).strftime('%Y-%m-%d %H:%M')
         print(st)
-        #d = time2 - expectedTime
-        
+        #d = expectedTime - time2
+        #seconds = d.seconds
 # =============================================================================
 #         if d.seconds >= 600:
 #             bookingStatus = "NO"
@@ -86,15 +89,22 @@ def createApp():
             rcNo = details["rcNo"]
             bookingStatus = 1
             respData = Prebooking_module(slotNo, phoneNo, rcNo, ExpectedArrivalTime,bookingStatus,AreaId);
-            time.sleep(30)
+            return jsonify(respData),200
+
+    def sleepingFunction():
+        pass            
+    '''time.sleep(180+seconds)
             arrivTime=arrivalTime(phoneNo)
             ArrivalTime = arrivTime["arrivalTime"]
             if ArrivalTime is None:
                 Prebooking_insert.updateBookingStatus(phoneNo)
+                slotStatus = "A"
+                changeSlotStatus(AreaId, slotNo, slotStatus)
                 return jsonify(respData), 200;
 
         else:
-            return jsonify(resp), 200
+            return jsonify(resp), 200'''
+   
     #api for registration part
     @app.route('/registration', methods = ['POST'])
     def registration():
@@ -236,7 +246,7 @@ def createApp():
         parkingArea = request.json['parkingArea']
         slotNumber = request.json['slotNumber']
         #numberPlate = request.json['numberPlate']
-        url = 'http://192.168.137.121:5000/numberPlate';
+        url = 'http://192.168.137.121:5004/numberPlate';
         response = requests.get(url)
         jsonLoads= json.loads(response.content)
         val=''
@@ -256,7 +266,7 @@ def createApp():
             return jsonify(resp), 200
     @app.route('/antimPlateDetection',methods=['GET'])
     def generatedText():
-        url = 'http://192.168.137.121:5000/sendImageVal';
+        url = 'http://192.168.137.121:5004/sendImageVal';
         response = requests.get(url)
         jsonLoads= json.loads(response.content)
         val=''
@@ -301,6 +311,24 @@ def createApp():
             return resp ,200
         else:
             return jsonify(resp1), 200
+    @app.route('/authorizePrebooked', methods = ['POST'])
+    def authorize_preBooked():
+        url = 'http://192.168.137.121:5004/numberPlate'
+        response = requests.get(url)
+        jsonLoads= json.loads(response.content)
+        val=''
+        for key in jsonLoads:
+            val = jsonLoads[key]
+        numberPlate = val
+        print(numberPlate)
+        phoneNumber = cardDetailsDB.getPhoneNumberThroughCar(numberPlate)
+        slotAreaNumber = insertupdate.getSlotAreaNumber(phoneNumber)
+
+        getSlotStatus = insertupdate.checkSlotAvailability(slotAreaNumber["slotNo"], slotAreaNumber["areaId"])
+        print(getSlotStatus)
+        if(getSlotStatus == "R" and slotAreaNumber["isPreBooked"]=="N"):
+            url='http://192.168.137.121:5002/buzzer'
+            response = request.get(url)
         
     return app
 

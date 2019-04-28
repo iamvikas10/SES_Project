@@ -6,7 +6,7 @@ import cv2
 import os
 import re
 from database.Prebooking_insert import book_details
-from database.viewUpdateDB import update_tableBooking
+from database.insertupdate import update_tableBooking,changeSlotStatus,checkSlotAvailability
 import time, datetime
 
 def get_car_details(phoneNo):
@@ -15,7 +15,7 @@ def get_car_details(phoneNo):
 
 def number_plate_detection(image):
     #image = cv2.imread(filename)
-   # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+   # gray = cv2.cvtColor(imagxe, cv2.COLOR_BGR2GRAY)
     img = image.convert('LA')
     
    
@@ -47,7 +47,7 @@ def antimPlateDetection(value):
     return text
 def getCurrentTime():
     ts = time.time();
-    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M')
     print(st)
     return st;
     
@@ -84,6 +84,3 @@ def confirm_booking(phoneNo,parkingArea,slotNumber,numberPlate):
         resp = {'isError':False}
         updateBookingTable = update_tableBooking(arrivalTime, phoneNo);
         return resp;
-    
-
-    
